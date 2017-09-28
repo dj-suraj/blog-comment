@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    {% block stylesheet %}{% endblock %}
+</head>
+<body>
+<div>
+
+    {% block content %}{% endblock %}
+
+</div>
+
+{% if app.request.hasPreviousSession %}
+    {% for type, messages in app.session.flashBag.all %}
+        {% for message in messages %}
+            <div class="alert alert-{{ type }}">
+                {{ message|trans({}, 'FOSUserBundle') }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+{% endif %}
+
+{% block javascripts %}
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+
+            $(".nav li").on("click", function () {
+                $(".nav li").removeClass("active");
+                $(this).addClass("active");
+            });
+
+            setTimeout(function () {
+                $(".alert").hide('blind', {}, 500)
+            }, 5000);
+
+        });
+
+    </script>
+{% endblock %}
+</body>
+</html>

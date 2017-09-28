@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1 class="text-center">Blogs</h1>
+
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
+
+        {#<div id="container-fluid">#}
+        <div class="pull-right" style="margin: 0% 1% 1% 0%">
+            <a href={{ path('blog_new') }}>
+                <button type="button" class="btn btn-primary"><span>Create Blog</span></button>
+            </a>
+        </div>
+        {#</div>#}
+    {% endif %}
+
+    {% for blog in blogs %}
+
+        <div>
+            <h2>
+                {{ blog.title|ucwords }}
+                <span style="font-size: 14px;">
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+
+                        <a href="{{ path('blog_edit', { 'id': blog.id }) }}">
+                            <span class="glyphicon glyphicon-edit"></span> Edit
+                        </a>
+                    {% endif %}
+                    <a href="{{ path('comment_new', { 'id': blog.id }) }}">
+                        <span class="glyphicon glyphicon-comment"></span> Comment
+                    </a>
+                </span>
+            </h2>
+            <br/>
+            <h4>{{ blog.description|length > 200 ? blog.description|slice(0, 200) ~ '...' : blog.description }}</h4><br/>
+        </div>
+    {% else %}
+        <h4>No Blogs found</h4>
+    {% endfor %}
+{% endblock %}

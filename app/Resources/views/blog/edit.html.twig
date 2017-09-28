@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block content %}
+
+    <div>
+        <h1>Edit Blog
+            <span style="font-size: 14px;">
+            {{ form_start(delete_form) }}
+                <button type="submit"><span class="glyphicon glyphicon-trash"></span></button>
+            {{ form_end(delete_form) }}
+        </span>
+        </h1>
+    </div>
+
+    {#{{ form_start(edit_form) }}#}
+    {#{{ form_widget(edit_form) }}#}
+    {#<input type="submit" class="btn btn-primary" value="Submit"/>#}
+    {#<a href="{{ path('blog_index') }}">#}
+        {#<button type="button" class="btn btn-info"><span>Back</span></button>#}
+    {#</a>#}
+    {#{{ form_end(edit_form) }}#}
+
+    <div class="container-fluid ">
+
+        {{ form_start(edit_form) }}
+
+        <div class="row form-group">
+            <div class="col-md-4">
+                {{ form_widget(edit_form.title, { 'attr': {'class': 'form-control', 'placeholder': 'blog.title'|trans } }) }}
+                {{ form_errors(edit_form.title) }}
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-md-4">
+                {{ form_widget(edit_form.description, { 'attr': {'class': 'form-control', 'placeholder': 'blog.description'|trans, 'rows': 10, 'cols': 5 } }) }}
+                {{ form_errors(edit_form.description) }}
+            </div>
+        </div>
+
+        {{ form_widget(edit_form.userId) }}
+
+        <div class="row form-group">
+            <div class="col-md-3">
+                <input class="btn btn-md btn-primary" type="submit" value="Submit">
+                <a href="{{ path('blog_index') }}" class="btn btn-md btn-danger">Back</a>
+            </div>
+        </div>
+        {{ form_end(edit_form) }}
+    </div>
+
+
+{% endblock %}
+
+

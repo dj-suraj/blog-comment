@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block content %}
+    <div class="container-fluid ">
+
+        <h2>{{ blog.title | upper }}</h2>
+        <h5>{{ blog.description }}</h5>
+
+        <h1>Comments: </h1>
+        {{ form_start(form) }}
+        <div class="row form-group">
+            <div class="col-md-8">
+                {{ form_widget(form.description, { 'attr': {'class': 'form-control', 'placeholder': 'blog.description'|trans, 'rows': 5, 'cols': 50 } }) }}
+                {{ form_errors(form.description) }}
+            </div>
+        </div>
+        <input type="submit" class="btn btn-md btn-primary" value="Add Comment"/>
+        <a href="{{ path('blog_index') }}" class="btn btn-md btn-danger">Back</a>
+
+        {{ form_end(form) }}
+
+        <h4>Comments: ({{  comment_list | length }} comments)</h4>
+        {% for item in comment_list %}
+
+            <div style="margin: 1% 1% 2% 1%;">
+                <h5><b>{{ item['users']['first_name'] ~ " "~ item['users']['last_name']}} : </b></h5>
+                {{ item['description'] }}
+
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+
+                    {% if not item['is_approved'] %}
+                        <a href="{{ path("approve_comment", {blog_id: blog.id, comment_id : item['id']} ) }}"
+                           class="btn btn-xs btn-primary">Approve</a>
+                    {% endif %}
+                {% endif %}
+
+            </div>
+        {% else %}
+            <h4>No comments found.</h4>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"/>
+{% endblock stylesheets %}
+
+{% block content %}
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
+
+        {#<div id="container-fluid">#}
+        <div class="pull-right" style="margin: 0% 1% 1% 0%">
+            <a href={{ path('blog_new') }}>
+                <button type="button" class="btn btn-primary"><span>Add Blog</span></button>
+            </a>
+        </div>
+        {#</div>#}
+    {% endif %}
+    <h3>Blogs</h3>
+    <table id="dt_blogs" class="display" width="100%"></table>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            $('#dt_blogs').DataTable({
+
+                "ajax": "http://127.0.0.1:8000/blog/api/get-all-blogs",
+                columns: [
+                    {
+                        title: "Id", render: function (data, type, full, meta) {
+                        return full.id;
+                    }
+                    },
+                    {
+                        title: "Title", render: function (data, type, full, meta) {
+                        return full.title;
+                    }
+                    },
+                    {
+                        title: "Description", render: function (data, type, full, meta) {
+                        return full.description;
+                    }
+                    },
+                    {
+                        title: "Action",
+                        render: function (data, type, full, meta) {
+
+                            var action = '<div class="links">';
+                            var id = full.id;
+                            var view_url = {{ path('blog_index') }} + id;
+                            var delete_url = "";
+                            var edit_url = {{ path('blog_edit') }} + id + '/edit';
+                            {#var delete_url = {{ path('blog_delete') }} +'/' + id;#}
+                            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                            action += '<a href=' + view_url + ' ><button type="button" class="btn btn-primary btn-xs"><span>View</span></button></a> ' +
+                                '<a href=' + view_url + '><button type="button" class="btn btn-info btn-xs"><span>Edit</span></button></a> ' +
+                                '<a href=' + delete_url + '><button type="button" class="btn btn-danger btn-xs"><span>Delete</span></button></a> ';
+
+                            {% elseif is_granted('ROLE_USER') %}
+                            action += '<a href="#"><button type="button" class="btn btn-primary btn-xs"><span>Comment</span></button></a> ';
+                            {% endif %}
+                            action += '</div>';
+
+                            return action;
+                        }
+                    }
+                ]
+
+            })
+            ;
+        })
+        ;
+
+    </script>
+{% endblock %}
